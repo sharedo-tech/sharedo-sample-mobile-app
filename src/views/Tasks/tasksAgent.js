@@ -1,4 +1,4 @@
-import { SharedoFetch, SharedoProfile } from '@sharedo/sharedo-mobile-core'
+import { SharedoFetch, SharedoProfile } from '@sharedo/mobile-core'
 
 function getMyTasks(rpp, p)
 {

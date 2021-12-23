@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import Main from './views/Main.vue'
 import NotLoggedIn from './views/NotLoggedIn.vue'
-import SharedoMobileCore, { SharedoAuth, SharedoProfile } from '@sharedo/sharedo-mobile-core'
+import SharedoMobileCore, { SharedoAuth, SharedoProfile } from '@sharedo/mobile-core'
 import settings from "./app/settings.js";
 import router from './router';
 import vuetify from './plugins/vuetify'
-import '@sharedo/sharedo-mobile-core/dist/global.css'
+import '@sharedo/mobile-core/dist/global.css'
 
 Vue.config.productionTip = false
 

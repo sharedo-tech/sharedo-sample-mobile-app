@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { SharedoAuth } from '@sharedo/sharedo-mobile-core'
+import { SharedoAuth } from '@sharedo/mobile-core'
 
 export default {
     name: "NotLoggedIn",

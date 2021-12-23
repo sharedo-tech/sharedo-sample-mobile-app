@@ -1,5 +1,5 @@
 # Sharedo sample mobile app
-An example mobile app built in Vue/Vuetify using the [sharedo-mobile-core](https://github.com/sharedo-tech/sharedo-mobile-core)
+An example mobile app built in Vue/Vuetify using the [Sharedo Mobile Core](https://github.com/sharedo-tech/sharedo-mobile-core)
 package to interact with an existing sharedo instance.
 
 ## Building

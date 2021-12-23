@@ -8,16 +8,19 @@ var settings =
     redirectUri: "https://localhost:8080/oAuthReply",
 }
 
-// Default to environment variables (VUE_APP_*) if specified
-// Set from command line before launching `npm run serve` or `npm run build`
+// DO NOT commit actual configuration to git.
+//
+// Two ways to override the default environment variables above:
+//
+// 1. Locally - set VUE_APP_* from commandline
 // e.g.: $env:VUE_APP_IDENTITY="https://my-sharedo-identity.local"
 //       $env:VUE_APP_API="https://my-sharedo.local"
 //       $env:VUE_APP_CLIENTID="my-id"
 // 
-// This is here so we don't commit URLs or client id's to git.
+// 2. When hosted in Azure Static Web Apps - set SHAREDO_* in application settings
+// e.g.: SHAREDO_IDENTITY="https://my-sharedo-identity.local"
+//       etc.
 //
-// You can remove this if you've set the settings up above
-// 
 if( process && process.env )
 {
     settings.identity = process.env.VUE_APP_IDENTITY || settings.identity;
@@ -27,4 +30,29 @@ if( process && process.env )
     settings.redirectUri = process.env.VUE_APP_REDIRECTURI || settings.redirectUri;
 }
 
-export default settings;
+function get() {
+
+    // Try to get config from Functions API, handling errors graceful
+    return new Promise((resolve, reject) => {
+        fetch("/api/settings")
+        .then(function(response) {
+            if (!response.ok)
+                throw new Error("Functions call failed: " + response.status);
+
+            return response.json();
+        })
+        .then(function(response) {
+            // Override default settings with result of Functions API call
+            resolve( Object.assign(settings, response) );
+        })
+        .catch(function() {
+            console.log("Functions not running? Using defaults");
+            resolve(settings);
+        });
+      });
+}
+
+export default 
+{
+    get,
+};

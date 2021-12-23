@@ -9,8 +9,6 @@ import '@sharedo/sharedo-mobile-core/dist/global.css'
 
 Vue.config.productionTip = false
 
-Vue.use(SharedoMobileCore, settings);
-
 // Keep same signature as Vue 3's createApp()
 var createApp = function (view) {
     return new Vue({
@@ -20,14 +18,21 @@ var createApp = function (view) {
     });
 };
 
-var notLoggedIn = function () {
-    const app = createApp(NotLoggedIn);
-    app.$mount("#app");
-}
+// This needs to be a promise, as we call Azure Functions API to get Static Web App configuration
+settings.get().then(function(config) {
 
-// Catch oauth reply
-SharedoAuth.initialise(notLoggedIn).then(() => {
-    SharedoProfile.loadProfile().then(() => {
-        createApp(Main).$mount('#app');
-    })
-}, err => { document.write("<div>" + err + "</div>"); })
+    Vue.use(SharedoMobileCore, config);
+
+    var notLoggedIn = function () {
+        const app = createApp(NotLoggedIn);
+        app.$mount("#app");
+    }
+    
+    // Catch oauth reply
+    SharedoAuth.initialise(notLoggedIn).then(() => {
+        SharedoProfile.loadProfile().then(() => {
+            createApp(Main).$mount('#app');
+        })
+    }, err => { document.write("<div>" + err + "</div>"); })
+    
+});

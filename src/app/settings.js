@@ -5,7 +5,8 @@ var settings =
     api: "https://xyz.sharedo.co.uk",
     clientId: "mobile-app",
     clientSecret: "not a secret",
-    redirectUri: "https://localhost:8080/oAuthReply",
+    //redirectUri: "https://localhost:8080/oAuthReply",   // Vue CLI
+    redirectUri: "https://localhost:4280/oAuthReply",   // Static Web Apps CLI (swa)
 }
 
 // DO NOT commit actual configuration to git.

@@ -44,3 +44,7 @@ $env:VUE_APP_CLIENTID="[your-clientid]"
 $env:VUE_APP_CLIENTSECRET="[your-clientsecret]"
 $env:VUE_APP_REDIRECTURI="https://[your-oauth-redirect-url]"
 ```
+
+## Useful links
+- [Vue PWA asset generator](https://www.npmjs.com/package/vue-pwa-asset-generator)
+- [Generate iOS splash screens](https://www.simicart.com/blog/pwa-splash-screen/#Using_a_iOS_Splash_Screen_Generator)

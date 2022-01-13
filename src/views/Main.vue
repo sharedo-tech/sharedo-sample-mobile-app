@@ -12,7 +12,7 @@
                         <v-icon>mdi-checkbox-multiple-marked-circle-outline</v-icon>
                     </v-btn>
 
-                    <v-btn :to="{ name: 'new-task' }">
+                    <v-btn class="primary-action" @click.stop="showNewTaskForm()">
                         <span>New Task</span>
                         <v-icon>mdi-plus-circle-outline</v-icon>
                     </v-btn>
@@ -29,15 +29,31 @@
 </template>
 
 <script>
+import TaskDetailForm from "./Tasks/TaskDetailForm.vue";
+import installPrompt from "../scripts/installPrompt.js";
+
 export default {
     name: "Main",
 
     components: {
+        TaskDetailForm,
     },
 
     data: function () {
         return {
         };
+    },
+
+    mounted: function() {
+        installPrompt.init();
+    },
+
+    methods: {
+
+        showNewTaskForm: function () {
+            var self = this;
+            self.$coreUi.dialog(TaskDetailForm, { title: "New task" });
+        },
     },
 };
 </script>

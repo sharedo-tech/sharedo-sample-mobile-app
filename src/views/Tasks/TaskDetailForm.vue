@@ -5,7 +5,7 @@
 
             <v-spacer />
 
-            <v-toolbar-title>Edit</v-toolbar-title>
+            <v-toolbar-title>{{title || "Edit"}}</v-toolbar-title>
 
             <v-spacer />
             

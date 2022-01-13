@@ -13,11 +13,33 @@ function getMyTasks(rpp, p)
             },
             types: 
             { 
-                includeTypes: ["task"],
-                includeTypesDerivedFrom: ["task"]
+                includeTypes: [
+                    "task",
+                    "task-activity",
+                    "task-appointment",
+                    "assignment",
+                    "change-request",
+                    "task-search",
+                    "case-enquiry",
+                    "task-standard-approval",
+                    "task-assessment",
+                    "task-file-review",
+                    "risk",
+                    "task-service-request",
+                    "demo-title-check",
+                ],
+                includeTypesDerivedFrom: [
+                    "task-activity",
+                    "task-appointment",
+                    "task-search",
+                    "task-standard-approval",
+                    "task-assessment",
+                    "task-service-request",
+                ],
             },
             phase:
             {
+                IncludeClosed: false,
                 includeRemoved: false
             },
             ownership:
@@ -34,8 +56,14 @@ function getMyTasks(rpp, p)
         [
             { path: "reference" },
             { path: "title" },
-            { path: "taskDueDate.date.utc.value" },
-            { path: "description.html" }
+            { path: "taskDueDate.date.local.value" },
+            { path: "description.html" },
+            { path: "type.name" },
+            { path: "type.iconClass" },
+            { path: "phase.name" },
+            { path: "roles.primary-owner.ods.name" },
+            { path: "roles.primary-owner.participantType.iconClass" },
+            { path: "documents!1.title" },
         ]
     });
 }

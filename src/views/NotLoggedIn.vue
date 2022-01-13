@@ -1,43 +1,64 @@
 <template>
     <v-app>
-        <v-app-bar app color="primary" dark prominent>
-            <v-spacer />
-
-            <v-toolbar-title>
-                <img
-                    src="https://www.sharedo.co.uk/wp-content/uploads/2019/07/sharedo-logo-wo.png"
-                    height="60"
-                />
-            </v-toolbar-title>
-
-            <v-spacer />
-        </v-app-bar>
 
         <v-main>
-            <v-container fill-height fluid style="background: #b0bec5">
-                <v-row align="center" justify="center">
-                    <v-col class="ml-3 mr-3">
-                        <v-btn
-                            depressed
-                            block
-                            rounded
-                            color="primary"
-                            @click="reallyRedirectToLogin()"
-                            min-width="150"
-                            :loading="loading"
-                            
-                        >
-                            Log in
-                        </v-btn>
-                    </v-col>
+            <v-container 
+                primary
+                fill-height 
+                fluid
+                id="not-logged-in"
+                >
+                <v-spacer />
+                <v-row>
+
+                    <v-container>
+                        <v-row justify="center">
+                            <img
+                                src="https://www.sharedo.co.uk/wp-content/uploads/2019/07/sharedo-logo-wo.png"
+                                height="60"
+                            />
+                        </v-row>
+                        <div class="mb-15"></div>
+                        <v-row>
+                            <v-col class="ml-3 mr-3">
+                                <v-btn
+                                    depressed
+                                    block
+                                    rounded
+                                    @click="reallyRedirectToLogin()"
+                                    min-width="150"
+                                    :loading="loading"
+                                    
+                                >
+                                    Log in
+                                </v-btn>
+                                
+                            </v-col>
+                        </v-row>
+                    </v-container>
+
                 </v-row>
             </v-container>
         </v-main>
+                
+        <v-footer
+            padless
+            color="primary"
+            >
+            <v-col
+                class="text-center primary--text text--darken-3"
+                cols="12"
+                >
+                powered by <strong>sharedo&trade;</strong>
+            </v-col>
+        </v-footer>
+
     </v-app>
 </template>
 
 <script>
 import { SharedoAuth } from '@sharedo/mobile-core'
+import installPrompt from "../scripts/installPrompt.js";
 
 export default {
     name: "NotLoggedIn",
@@ -46,6 +67,10 @@ export default {
         return {
             loading: false
         };
+    },
+
+    mounted: function() {
+        installPrompt.init();
     },
 
     methods: {
@@ -60,3 +85,12 @@ export default {
     },
 };
 </script>
+
+<style>
+    #not-logged-in .v-banner {
+        position: fixed !important;
+        top: 12px;
+        right: 12px;
+        left: 12px;
+    }
+</style>

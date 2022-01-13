@@ -2,6 +2,9 @@
 node_modules
 /dist
 
+# Azure functions
+sample.dat
+
 # local env files
 .env.local
 .env.*.local

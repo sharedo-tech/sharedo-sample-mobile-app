@@ -57,3 +57,11 @@ export default {
     },
 };
 </script>
+<style>
+    .v-toolbar {
+        /* Cover mobile status bar */
+        padding-top: 28px;
+        margin-top: -28px !important;
+        height: 84px !important;
+    }
+</style>

@@ -4,6 +4,7 @@
         <VTopToolbar :hideRight="true">
             <template slot="content">
                 <v-text-field
+                    id="search-field"
                     hide-details
                     solo
                     flat
@@ -59,6 +60,10 @@ export default {
 </script>
 
 <style>
+#search-field {
+    caret-color: white;
+}
+
 .v-toolbar .v-text-field.v-text-field--solo .v-input__control {
     min-height: 40px !important;
 }

@@ -30,7 +30,7 @@
 
 <script>
 import TaskDetailForm from "./Tasks/TaskDetailForm.vue";
-import installPrompt from "../scripts/installPrompt.js";
+import { InstallPrompt } from '@sharedo/mobile-core';
 
 export default {
     name: "Main",
@@ -45,7 +45,7 @@ export default {
     },
 
     mounted: function() {
-        installPrompt.init();
+        InstallPrompt.init();
     },
 
     methods: {

@@ -57,8 +57,7 @@
 </template>
 
 <script>
-import { SharedoAuth } from '@sharedo/mobile-core'
-import installPrompt from "../scripts/installPrompt.js";
+import { SharedoAuth, InstallPrompt } from '@sharedo/mobile-core'
 
 export default {
     name: "NotLoggedIn",
@@ -70,7 +69,7 @@ export default {
     },
 
     mounted: function() {
-        installPrompt.init();
+        InstallPrompt.init();
     },
 
     methods: {

@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import Main from './views/Main.vue'
 import NotLoggedIn from './views/NotLoggedIn.vue'
-import SharedoMobileCore, { SharedoAuth, SharedoProfile } from '@sharedo/mobile-core'
-import settings from "./app/settings.js";
-import router from './router';
+import SharedoMobileCore, { SharedoAuth, SharedoProfile, CoreUi } from '@sharedo/mobile-core'
+import settings from "./app/settings.js"
+import router from './router'
 import vuetify from './plugins/vuetify'
 import '@sharedo/mobile-core/dist/global.css'
+import './registerServiceWorker'
 
 Vue.config.productionTip = false
 
@@ -19,7 +20,9 @@ var createApp = function (view) {
 };
 
 // This needs to be a promise, as we call Azure Functions API to get Static Web App configuration
+var l = CoreUi.loading();
 settings.get().then(function(config) {
+    l.dismiss();
 
     Vue.use(SharedoMobileCore, config);
 

@@ -5,11 +5,12 @@ module.exports = {
         'vuetify'
     ],
     devServer: {
+        port: 8081,
         https: {
-            key: fs.readFileSync('./certs/localdev-key.pem'),
-            cert: fs.readFileSync('./certs/localdev-cert.pem'),
+            key: fs.readFileSync('./certs/localhost+2-key.pem'),
+            cert: fs.readFileSync('./certs/localhost+2.pem'),
         },
-        public: 'https://localhost:8080/'
+        public: 'https://localhost:8081/'
     },
     pwa: {
         name: 'Sharedo',

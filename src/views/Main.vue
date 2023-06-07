@@ -6,10 +6,15 @@
 
             <VBottomNav>
 
-                <template slot="contents">                
+                <template slot="contents">
                     <v-btn :to="{ path: '/tasks' }">
                         <span>Tasks</span>
                         <v-icon>mdi-checkbox-multiple-marked-circle-outline</v-icon>
+                    </v-btn>
+
+                    <v-btn :to="{ name: 'matters' }">
+                        <span>Work Items</span>
+                        <v-icon>mdi-rocket-launch</v-icon>
                     </v-btn>
 
                     <v-btn class="primary-action" @click.stop="showNewTaskForm()">
@@ -44,7 +49,7 @@ export default {
         };
     },
 
-    mounted: function() {
+    mounted: function () {
         InstallPrompt.init();
     },
 

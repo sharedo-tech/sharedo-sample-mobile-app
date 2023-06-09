@@ -1,6 +1,6 @@
 import { SharedoFetch, SharedoProfile } from '@sharedo/mobile-core'
 
-const getMine = (page, pageSize) => {
+const list = (page, pageSize) => {
   const payload = {
     search: {
       page: {
@@ -41,6 +41,9 @@ const getMine = (page, pageSize) => {
   return SharedoFetch.post("/api/v1/public/workItem/findByQuery", payload);
 };
 
+const get = (id) => SharedoFetch.get(`/api/v1/public/workItem/${id}`);
+
 export default {
-  getMine
+  list,
+  get
 }

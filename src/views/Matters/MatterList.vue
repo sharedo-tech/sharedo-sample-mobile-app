@@ -11,7 +11,7 @@
       <v-skeleton-loader type="card, card, card" />
     </div>
     <v-card class="mx-auto mb-3" v-show="!loading" v-for="matter in matters" :key="matter.id" outlined>
-      <div class="d-flex">
+      <div class="d-flex" @click.stop="$router.push({ name: 'matter-detail', params: { id: matter.id } })">
         <div class="flex-grow-1">
           <v-card-title class="align-start flex-nowrap mb-3">
             <div class="flex-grow-0">
@@ -27,6 +27,9 @@
           <v-card-text class="grey--text text--darken-1">
             <div class="text-truncate">{{ matter.reference || "No reference" }}</div>
           </v-card-text>
+        </div>
+        <div class="flex-grow-0 d-flex">
+          <v-icon large color="grey lighten-2">mdi-chevron-right</v-icon>
         </div>
       </div>
     </v-card>
@@ -57,7 +60,7 @@ export default {
 
       this.lastPageLoaded++;
 
-      const response = await matters.getMine(this.lastPageLoaded, PAGE_SIZE);
+      const response = await matters.list(this.lastPageLoaded, PAGE_SIZE);
 
       this.loading = false;
       this.matters = response.results.map(item => ({

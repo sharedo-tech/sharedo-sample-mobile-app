@@ -38,6 +38,12 @@ const routes = [
         path: "/work-items",
         name: "matters",
         component: () => import("@/views/Matters/MatterList.vue")
+    },
+    {
+        path: "/work-items/:id",
+        name: "matter-detail",
+        props: true,
+        component: () => import("@/views/Matters/MatterDetail.vue")
     }
 ]
 

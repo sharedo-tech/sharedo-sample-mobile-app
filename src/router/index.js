@@ -44,6 +44,16 @@ const routes = [
         name: "matter-detail",
         props: true,
         component: () => import("@/views/Matters/MatterDetail.vue")
+    },
+    {
+        path: '/notifications',
+        name: 'notifications',
+        component: () => import('@/views/Notifications/NotificationList.vue')
+    },
+    {
+        path: "/notifications/settings",
+        name: "notification-settings",
+        component: () => import("@/views/Notifications/NotificationSettings.vue")
     }
 ]
 

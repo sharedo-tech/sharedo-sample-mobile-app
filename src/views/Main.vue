@@ -22,6 +22,11 @@
                         <v-icon>mdi-plus-circle-outline</v-icon>
                     </v-btn>
 
+                    <v-btn :to="{ name: 'notifications' }">
+                        <span>Notifications</span>
+                        <v-icon>mdi-bell-outline</v-icon>
+                    </v-btn>
+
                     <v-btn :to="{ name: 'search' }">
                         <span>Search</span>
                         <v-icon>mdi-magnify</v-icon>

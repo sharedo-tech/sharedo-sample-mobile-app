@@ -2,7 +2,7 @@
   <v-container>
     <v-top-toolbar title="Notification settings">
       <template slot="left">
-        <v-icon @click="saveAndBack()">
+        <v-icon @click="saveAndBack">
           mdi-arrow-left
         </v-icon>
       </template>

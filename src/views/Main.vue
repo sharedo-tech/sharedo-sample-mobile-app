@@ -24,7 +24,10 @@
 
                     <v-btn :to="{ name: 'notifications' }">
                         <span>Notifications</span>
-                        <v-icon>mdi-bell-outline</v-icon>
+                        <v-badge :value="unreadNotifications > 0" :content="unreadNotifications" color="error lighten-1"
+                            offset-x="12" offset-y="14">
+                            <v-icon>mdi-bell-outline</v-icon>
+                        </v-badge>
                     </v-btn>
 
                     <v-btn :to="{ name: 'search' }">
@@ -39,11 +42,16 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 import TaskDetailForm from "./Tasks/TaskDetailForm.vue";
-import { InstallPrompt } from '@sharedo/mobile-core';
+import { InstallPrompt, SharedoProfile } from '@sharedo/mobile-core';
+import serviceWorkerBridge from "@/mixins/serviceWorkerBridge";
+import notifications from "@/views/Notifications/notificationsAgent";
 
 export default {
     name: "Main",
+
+    mixins: [serviceWorkerBridge],
 
     components: {
         TaskDetailForm,
@@ -54,12 +62,30 @@ export default {
         };
     },
 
-    mounted: function () {
+    computed: {
+        ...mapState({
+            unreadNotifications: state => state.notifications.unread,
+        }),
+    },
+
+    mounted: async function () {
         InstallPrompt.init();
+        await this.getNotificationCount();
     },
 
     methods: {
+        ...mapActions({
+            setUnreadNotifications: "setUnreadNotifications",
+        }),
+        async getNotificationCount() {
+            try {
+                const notificationsResponse = await notifications.getFor(SharedoProfile.profile.userId);
 
+                this.setUnreadNotifications(notificationsResponse.numberOfNewItems);
+            } catch (error) {
+                console.error(error);
+            }
+        },
         showNewTaskForm: function () {
             var self = this;
             self.$coreUi.dialog(TaskDetailForm, { title: "New task" });

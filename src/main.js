@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Main from './views/Main.vue'
 import NotLoggedIn from './views/NotLoggedIn.vue'
 import SharedoMobileCore, { SharedoAuth, SharedoProfile, CoreUi } from '@sharedo/mobile-core'
+import store from "@/store";
 import settings from "./app/settings.js"
 import router from './router'
 import vuetify from './plugins/vuetify'
@@ -14,6 +15,7 @@ Vue.config.productionTip = false
 var createApp = function (view) {
     return new Vue({
         router,
+        store,
         vuetify,
         render: h => h(view),
     });

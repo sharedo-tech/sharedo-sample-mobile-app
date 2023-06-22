@@ -45,37 +45,33 @@ const requestPermissionAndRegister = async publicKey => {
   }
 }
 
-const getSubscriptionAndRegister = publicKey => {
+const getSubscriptionAndRegister = async publicKey => {
   if (!publicKey) {
     throw "No VAPID key.";
   }
 
-  return new Promise(async (resolve, reject) => {
-    const registration = await serviceWorker;
+  const registration = await serviceWorker;
 
-    if (!registration.pushManager) {
-      reject("No push manager.");
-    } else {
-      let subscription = await registration.pushManager.getSubscription();
-      if (subscription === null) {
-        const config = {
-          userVisibleOnly: true,
-          applicationServerKey: publicKey
-        };
+  if (!registration.pushManager) {
+    throw "No push manager.";
+  } else {
+    let subscription = await registration.pushManager.getSubscription();
+    if (subscription === null) {
+      const config = {
+        userVisibleOnly: true,
+        applicationServerKey: publicKey
+      };
 
-        try {
-          subscription = await registration.pushManager.subscribe(config);
-          await register(subscription);
-          resolve();
-        } catch (error) {
-          reject(`Unable to subscribe to push: ${error}`);
-        }
-      } else {
+      try {
+        subscription = await registration.pushManager.subscribe(config);
         await register(subscription);
-        resolve();
+      } catch (error) {
+        throw `Unable to subscribe to push: ${error}`;
       }
+    } else {
+      await register(subscription);
     }
-  })
+  }
 }
 
 export default {

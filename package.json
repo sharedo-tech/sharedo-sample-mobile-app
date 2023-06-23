@@ -7,7 +7,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "prod": "npx serve -s -l 8081 --ssl-cert .\\certs\\localhost+2.pem --ssl-key .\\certs\\localhost+2-key.pem dist"
   },
   "dependencies": {
     "@sharedo/mobile-core": "~0.1.7",

@@ -3,7 +3,7 @@ import { SharedoFetch, SharedoProfile } from '@sharedo/mobile-core'
 const APP_CHANNEL_TYPE = "push";
 
 const getSettings = async () => {
-  const response = await SharedoFetch.get(`/api/user/notifications/${SharedoProfile.profile.userId}/settings`);
+  const response = await SharedoFetch.get(`/api/v1/public/notifications/${SharedoProfile.profile.userId}/settings`);
 
   const categories = [];
 
@@ -44,7 +44,7 @@ const saveSettings = categories => {
     });
   });
 
-  return SharedoFetch.post(`/api/user/notifications/${SharedoProfile.profile.userId}/settingsForChannelType/${APP_CHANNEL_TYPE}`, settingList);
+  return SharedoFetch.put(`/api/v1/public/notifications/${SharedoProfile.profile.userId}/settings/${APP_CHANNEL_TYPE}`, settingList);
 };
 
 const registerForWebPush = config => SharedoFetch.post(`/api/v1/public/notifications/registerForWebPush`, config);

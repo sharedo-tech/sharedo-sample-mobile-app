@@ -51,11 +51,11 @@ const registerForWebPush = config => SharedoFetch.post(`/api/v1/public/notificat
 
 const getWebPushConfig = () => SharedoFetch.get(`/api/v1/public/notifications/webPushConfig`);
 
-const getFor = userId => SharedoFetch.get(`/api/notifications/${userId}/quickView`);
+const getFor = userId => SharedoFetch.get(`/api/v1/public/notifications/${userId}`);
 
-const dismiss = (notificationId, userId) => SharedoFetch.delete(`/api/notifications/${notificationId}/${userId}/dismiss`);
+const dismiss = (notificationId, userId) => SharedoFetch.delete(`/api/v1/public/notifications/${userId}/${notificationId}`);
 
-const dismissAllFor = userId => SharedoFetch.delete(`/api/notifications/${userId}/dismiss`);
+const dismissAllFor = userId => SharedoFetch.delete(`/api/v1/public/notifications/${userId}`);
 
 export default {
   getSettings,

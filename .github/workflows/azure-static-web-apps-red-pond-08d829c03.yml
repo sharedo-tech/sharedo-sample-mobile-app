@@ -3,11 +3,11 @@ name: Deploy to Whoa James
 on:
   push:
     branches:
-      - main
+      - jh-update
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
-      - main
+      - jh-update
 
 jobs:
   build_and_deploy_job:

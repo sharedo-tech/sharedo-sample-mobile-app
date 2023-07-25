@@ -6,6 +6,7 @@ import store from "@/store";
 import settings from "./app/settings.js"
 import router from './router'
 import vuetify from './plugins/vuetify'
+import Menu from "@/components/Menu";
 import '@sharedo/mobile-core/dist/global.css'
 import './registerServiceWorker'
 
@@ -23,21 +24,23 @@ var createApp = function (view) {
 
 // This needs to be a promise, as we call Azure Functions API to get Static Web App configuration
 var l = CoreUi.loading();
-settings.get().then(function(config) {
+settings.get().then(function (config) {
     l.dismiss();
 
     Vue.use(SharedoMobileCore, config);
+
+    Vue.component("AppMenu", Menu);
 
     var notLoggedIn = function () {
         const app = createApp(NotLoggedIn);
         app.$mount("#app");
     }
-    
+
     // Catch oauth reply
     SharedoAuth.initialise(notLoggedIn).then(() => {
         SharedoProfile.loadProfile().then(() => {
             createApp(Main).$mount('#app');
         })
     }, err => { document.write("<div>" + err + "</div>"); })
-    
+
 });

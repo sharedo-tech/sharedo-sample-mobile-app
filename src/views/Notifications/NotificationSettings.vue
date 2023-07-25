@@ -1,6 +1,9 @@
 <template>
   <v-container>
     <v-top-toolbar title="Notification settings">
+      <template v-slot:menu>
+        <app-menu />
+      </template>
       <template slot="left">
         <v-icon @click="saveAndBack">
           mdi-arrow-left

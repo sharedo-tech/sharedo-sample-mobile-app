@@ -1,6 +1,9 @@
 <template>
   <v-container :fill-height="empty" :fluid="empty">
     <v-top-toolbar title="Notifications">
+      <template v-slot:menu>
+        <app-menu />
+      </template>
       <template slot="right">
         <v-icon v-if="unread > 0" @click="dismissAll">mdi-close-circle</v-icon>
         <router-link :to="{ name: 'notification-settings' }">

@@ -2,6 +2,9 @@
     <v-container>
         
         <VTopToolbar :hideRight="true">
+            <template v-slot:menu>
+                <app-menu />
+            </template>
             <template slot="content">
                 <v-text-field
                     id="search-field"

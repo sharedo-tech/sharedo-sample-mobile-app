@@ -1,53 +1,46 @@
 <template>
-
     <v-container style='background: #f1f5f8'>
 
         <VTopToolbar title="Task list">
-            
+            <template v-slot:menu>
+                <app-menu />
+            </template>
             <!-- Override right nav button -->
             <template slot="right">
-                 <v-icon v-visible="!loading" @click="loadPage(true)">
-                     mdi-cached
+                <v-icon v-visible="!loading" @click="loadPage(true)">
+                    mdi-cached
                 </v-icon>
             </template>
         </VTopToolbar>
 
         <div v-show="loading">
 
-            <v-skeleton-loader
-                type="card, card, card"
-            ></v-skeleton-loader>
+            <v-skeleton-loader type="card, card, card"></v-skeleton-loader>
 
         </div>
 
-        <v-card
-            class="mx-auto mb-3"
-            outlined
-            v-show="!loading"
-            v-for="task in tasks"
-            :key="task.id"
-        >
+        <v-card class="mx-auto mb-3" outlined v-show="!loading" v-for="task in tasks" :key="task.id">
             <div class="d-flex" @click.stop="navTo(task)">
                 <div class="flex-grow-1">
-                        
+
                     <v-card-title class="align-start flex-nowrap mb-3">
                         <div class="flex-grow-0">
-                            <v-icon left>{{task.icon}}</v-icon>
+                            <v-icon left>{{ task.icon }}</v-icon>
                         </div>
                         <div class="flex-grow-1" style="word-break: break-word;">
-                            <span class="font-weight-bold blue-grey--text">{{task.title}}</span>
+                            <span class="font-weight-bold blue-grey--text">{{ task.title }}</span>
                         </div>
                     </v-card-title>
 
                     <v-card-subtitle class="font-weight-bold pb-1">
-                        {{task.type}} - {{task.phase}}
+                        {{ task.type }} - {{ task.phase }}
                     </v-card-subtitle>
-                    
+
                     <v-card-text class="grey--text text--darken-1">
-                        <div class="text-truncate">{{task.reference || "No reference"}}</div>
+                        <div class="text-truncate">{{ task.reference || "No reference" }}</div>
                         <div class="text-truncate">
-                            <v-icon left small style="vertical-align: inherit;">{{task.primaryOwnerIcon}}</v-icon>
-                            <span>{{task.primaryOwner}}</span>
+                            <v-icon left small style="vertical-align: inherit;">{{ task.primaryOwnerIcon }}</v-icon>
+                            <span>{{ task.primaryOwner }}</span>
                         </div>
                     </v-card-text>
                 </div>
@@ -66,22 +59,13 @@
             </v-card-actions>
         </v-card>
 
-        <v-btn
-            outlined
-            rounded
-            text
-            block
-            color="primary"
-            v-show="!loading && hasMore"
-            :loading="loadingMore"
-            @click.stop="loadNextPage()"
-        >
+        <v-btn outlined rounded text block color="primary" v-show="!loading && hasMore" :loading="loadingMore"
+            @click.stop="loadNextPage()">
             More
         </v-btn>
-        
+
     </v-container>
-  
-  </template>
+</template>
 
   
 <script>
@@ -92,8 +76,7 @@ const rpp = 20;
 export default {
     components: {
     },
-    data()
-    {
+    data() {
         return {
             loading: true,
             loadingMore: false,
@@ -102,18 +85,15 @@ export default {
             hasMore: true
         };
     },
-    mounted()
-    {
+    mounted() {
         var self = this;
-        self.loadPage().then(result =>
-        {
+        self.loadPage().then(result => {
             self.hasMore = result.hasMore;
         }).catch(console.error);
     },
     methods:
     {
-        loadPage(refresh)
-        {
+        loadPage(refresh) {
             if (refresh) {
                 // TODO scroll to top
                 // TODO hasMore not working?
@@ -123,12 +103,10 @@ export default {
                 this.loading = true;
             }
 
-            return new Promise((resolve, reject) =>
-            {
+            return new Promise((resolve, reject) => {
                 this.lastPageLoaded++;
 
-                tasksAgent.getMyTasks(rpp, this.lastPageLoaded).then(data =>
-                {
+                tasksAgent.getMyTasks(rpp, this.lastPageLoaded).then(data => {
                     this.loading = false;
                     var models = data.results.map(t =>
                     ({
@@ -155,28 +133,23 @@ export default {
                 }).catch(console.error);
             });
         },
-        
-        loadNextPage()
-        {
+
+        loadNextPage() {
             this.loadingMore = true;
-            this.loadPage().then(result =>
-            {
+            this.loadPage().then(result => {
                 this.loadingMore = false;
-                if( !result.hasMore )
-                {
+                if (!result.hasMore) {
                     this.hasMore = false;
-                }                    
+                }
             }).catch(console.error);
         },
 
-        navTo(task)
-        {
+        navTo(task) {
             var self = this;
             self.$router.push({ path: task.link });
         },
 
-        showOptions(task)
-        {
+        showOptions(task) {
             var self = this;
 
             self.$coreUi.actionSheet({
@@ -190,21 +163,22 @@ export default {
 </script>
 
 <style scoped>
-    .v-card__title {
-        font-size: 1.1rem;
-        line-height: 1.5rem;
-    }
+.v-card__title {
+    font-size: 1.1rem;
+    line-height: 1.5rem;
+}
 
-    .v-card__title .v-icon.v-icon {
-        font-size: 22px;
-    }
+.v-card__title .v-icon.v-icon {
+    font-size: 22px;
+}
 
-    .v-card__text, .card-text-small {
-        font-size: .775rem;
-    }
+.v-card__text,
+.card-text-small {
+    font-size: .775rem;
+}
 
-    /* Purposefully unspecific CSS so red--text overrides us */
-    .task-lag {
-        color: var(--v-secondary-darken1);
-    }
+/* Purposefully unspecific CSS so red--text overrides us */
+.task-lag {
+    color: var(--v-secondary-darken1);
+}
 </style>

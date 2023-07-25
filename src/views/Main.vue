@@ -23,7 +23,7 @@
                     </v-btn>
 
                     <v-btn :to="{ name: 'notifications' }">
-                        <span>Notifications</span>
+                        <span>Alerts</span>
                         <v-badge :value="unreadNotifications > 0" :content="unreadNotifications" color="error lighten-1"
                             offset-x="12" offset-y="14">
                             <v-icon>mdi-bell-outline</v-icon>

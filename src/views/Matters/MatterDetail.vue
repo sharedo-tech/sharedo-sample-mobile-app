@@ -1,6 +1,9 @@
 <template>
   <v-container>
     <v-top-toolbar title="Work Item" show-back>
+      <template v-slot:menu>
+        <app-menu />
+      </template>
       <template slot="right">
         <v-icon>
           mdi-dots-horizontal

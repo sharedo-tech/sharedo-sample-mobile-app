@@ -17,6 +17,11 @@ const routes = [
         component: TaskList
     },
     {
+        path: "/profile",
+        name: "profile",
+        component: () => import("@/views/Profile/Profile.vue")
+    },
+    {
         // Tab 1 -> Detail
         path: "/tasks/:id",
         name: "task-detail",

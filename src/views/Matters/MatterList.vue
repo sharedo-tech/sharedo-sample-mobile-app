@@ -1,6 +1,9 @@
 <template>
   <v-container style='background: #f1f5f8'>
     <v-top-toolbar title="Work item list">
+      <template v-slot:menu>
+        <app-menu />
+      </template>
       <template slot="right">
         <v-icon v-visible="!loading" @click="loadPage(true)">
           mdi-cached

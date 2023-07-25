@@ -1,6 +1,9 @@
 <template>
     <v-container>
         <VTopToolbar title="Task" :showBack="true">
+            <template v-slot:menu>
+                <app-menu />
+            </template>
             <!-- Override right nav button -->
             <template slot="right">
                  <v-icon @click="showActionSheet()">

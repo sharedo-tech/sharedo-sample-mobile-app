@@ -62,7 +62,6 @@ export default {
       name: null,
       profileImageDefault: null,
       profileImageBase64: null,
-      personaName: null,
       availability: {},
       contactDetails: [],
 
@@ -91,7 +90,6 @@ export default {
 
       const profile = await profiles.get();
 
-      this.personaName = profile.personaName;
       this.availability = this.availabilityOptions[profile.availabilitySystemName] || {};
       this.contactDetails = profile.aspectData.contactDetails
         .map(item => {
@@ -111,7 +109,7 @@ export default {
     loadAvatar: async function () {
       const avatar = await profiles.getAvatar();
 
-      this.profileImageBase64 = avatar ? `data:${avatar.mimeType};base64,${avatar.contents}` : null;
+      this.profileImageBase64 = avatar ? `data:${avatar.mimeType};base64,${avatar.content}` : null;
     },
     showActionSheet: function () {
       this.$coreUi.actionSheet({

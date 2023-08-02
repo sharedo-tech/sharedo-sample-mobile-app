@@ -25,7 +25,17 @@ const routes = [
         // Tab 1 -> Detail
         path: "/tasks/:id",
         name: "task-detail",
+        props: true,
         component: TaskDetail
+    },
+    {
+        // Tab 1 -> Detail -> Time Entries
+        path: "/tasks/:id/time",
+        name: "task-time-entries",
+        props: ({ params }) => ({
+            sharedoId: params.id
+        }),
+        component: () => import('../views/Time/TimeEntryList.vue')
     },
     {
         // Tab 2

@@ -6,8 +6,10 @@
             </template>
             <!-- Override right nav button -->
             <template slot="right">
-                 <v-icon @click="showActionSheet()">
-                     mdi-dots-horizontal
+                <v-icon v-if="canViewTime"
+                    @click="$router.push({ name: 'task-time-entries', params: { id } })">mdi-clock-outline</v-icon>
+                <v-icon @click="showActionSheet()">
+                    mdi-dots-horizontal
                 </v-icon>
             </template>
         </VTopToolbar>
@@ -19,13 +21,8 @@
         <div v-show="!loading">
 
             <div class="float-right" v-if="canEdit">
-                <v-btn
-                    small
-                    icon
-                    right
-                    color="primary"
-                    @click.stop="showTaskDetailForm()"
-                    ><v-icon>mdi-pencil-outline</v-icon>
+                <v-btn small icon right color="primary"
+                    @click.stop="showTaskDetailForm()"><v-icon>mdi-pencil-outline</v-icon>
                 </v-btn>
             </div>
 
@@ -45,13 +42,8 @@
             <v-divider class="mb-3"></v-divider>
 
             <div class="float-right" v-if="canEdit">
-                <v-btn
-                    small
-                    icon
-                    right
-                    color="primary"
-                    @click.stop="showTaskDetailForm()"
-                    ><v-icon>mdi-pencil-outline</v-icon>
+                <v-btn small icon right color="primary"
+                    @click.stop="showTaskDetailForm()"><v-icon>mdi-pencil-outline</v-icon>
                 </v-btn>
             </div>
             <div>
@@ -64,6 +56,7 @@
 </template>
 
 <script>
+import { SharedoProfile } from "@sharedo/mobile-core";
 import TaskDetailForm from "./TaskDetailForm.vue";
 import tasksAgent from "./tasksAgent";
 
@@ -71,7 +64,12 @@ export default {
     components: {
         TaskDetailForm,
     },
-
+    props: {
+        id: {
+            type: String,
+            required: true
+        }
+    },
     data: function () {
         return {
             loading: true,
@@ -81,19 +79,22 @@ export default {
             canEdit: false,
         };
     },
-
+    computed: {
+        canViewTime: function () {
+            return SharedoProfile.profile.globalPermissions.indexOf("core.time.read") !== -1;
+        }
+    },
     mounted: function (props) {
         var self = this;
-        var id = self.$route.params.id;
 
-        tasksAgent.getTask(id).then((task) => {
+        tasksAgent.getTask(this.id).then((task) => {
             self.reference = task.workItem.reference;
             self.title = task.workItem.title;
             self.description = task.workItem.description;
             self.loading = false;
 
             if (!self.canEdit) {
-                
+
                 // Locked - show banner
                 this.$coreUi.banner({
                     message: "You cannot edit this item.",
@@ -114,7 +115,7 @@ export default {
                     { text: "Take ownership", color: "primary", icon: "mdi-arrow-left", handler: self.takeOwnership.bind(self) },
                     { text: "Progress to", type: "header" },
                     { text: "Done", color: "primary", icon: "mdi-check", handler: self.confirmTransitionTo.bind(self, "done") },
-                    { text: "Remove", color: "error", icon: "mdi-trash-can-outline", handler: function() {} },
+                    { text: "Remove", color: "error", icon: "mdi-trash-can-outline", handler: function () { } },
                 ]
             });
         },
@@ -143,8 +144,8 @@ export default {
                 title: "Progress to Done",
                 message: "Are you sure?",
                 btns: [
-                    {text: "Cancel"},
-                    {text: "OK", color: "primary", handler: function() { self.transitionTo("done"); }}
+                    { text: "Cancel" },
+                    { text: "OK", color: "primary", handler: function () { self.transitionTo("done"); } }
                 ]
             });
         },

@@ -20,7 +20,7 @@
         </div>
 
         <v-card class="mx-auto mb-3" outlined v-show="!loading" v-for="task in tasks" :key="task.id">
-            <div class="d-flex" @click.stop="navTo(task)">
+            <div class="d-flex" @click.stop="$router.push({ name: 'task-detail', params: { id: task.id } })">
                 <div class="flex-grow-1">
 
                     <v-card-title class="align-start flex-nowrap mb-3">

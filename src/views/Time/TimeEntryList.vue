@@ -5,7 +5,7 @@
         <app-menu />
       </template>
       <template v-slot:right>
-        <v-icon v-if="hasCreatePermission" @click="createEntry()">mdi-plus</v-icon>
+        <v-icon v-if="hasCreatePermission" @click="createEntry">mdi-plus</v-icon>
       </template>
     </v-top-toolbar>
     <div v-show="loading">
@@ -61,10 +61,12 @@
 import moment from "moment";
 import { SharedoProfile } from "@sharedo/mobile-core";
 import time from "./timeAgent";
+import TimeEntryForm from "./TimeEntryForm"
 
 const PAGE_SZE = 99;
 
 export default {
+  components: { TimeEntryForm },
   props: {
     sharedoId: {
       type: String,
@@ -166,10 +168,41 @@ export default {
       return y && x.startDay === y.startDay;
     },
     createEntry: function () {
-
+      this.$coreUi.dialog(TimeEntryForm, {
+        sharedoId: this.sharedoId,
+        timekeeperName: SharedoProfile.profile.name,
+        canEdit: true,
+        stateSystemName: "draft",
+        odsId: SharedoProfile.profile.userId,
+      }, {
+        closing: async result => {
+          if (result) {
+            await this.refresh();
+          }
+        }
+      });
     },
-    editEntry: function () {
-
+    editEntry: function (entry) {
+      this.$coreUi.dialog(TimeEntryForm, {
+        sharedoId: this.sharedoId,
+        id: entry.id,
+        startDateTime: new Date(entry.startDateTime),
+        endDateTime: new Date(entry.endDateTime),
+        durationSeconds: entry.durationSeconds,
+        timeCodeCategoryId: entry.timeCodeCategoryId,
+        timeCode: entry.timeCode,
+        timekeeperName: entry.timekeeperName,
+        billingNotes: entry.billingNotes,
+        canEdit: this.isEditable(entry.state) && entry.odsId === SharedoProfile.profile.userId,
+        stateSystemName: entry.state,
+        odsId: entry.odsId,
+      }, {
+        closing: async result => {
+          if (result) {
+            await this.refresh();
+          }
+        }
+      });
     }
   },
   mounted: async function () {
@@ -194,4 +227,5 @@ export default {
 .missing {
   font-style: italic;
   color: var(--v-grey-darken1);
-}</style>
+}
+</style>

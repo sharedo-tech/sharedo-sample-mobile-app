@@ -38,7 +38,7 @@ const submit = id => {
   return SharedoFetch.post(endPoint);
 };
 
-const _delete = (workItemId, id) => SharedoFetch.delete({ url: `/api/v1/public/workitem/${workItemId}/time/${id}`, responseType: "text" });
+const _delete = id => SharedoFetch.delete({ url: `/api/v2/public/time/entry/${id}`, responseType: "text" });
 
 const capture = (category, workItemId) => SharedoFetch.get(`/api/v2/public/time/capture/${encodeURIComponent(category)}/${workItemId}`);
 

@@ -1,6 +1,6 @@
 import { SharedoFetch } from '@sharedo/mobile-core'
 
-const getConfiguration = () => SharedoFetch.get("/api/timeentries/config");
+const getConfiguration = () => SharedoFetch.get("/api/v2/public/time/entry/config");
 
 const listFor = (workItemId, page = 1, pageSize = 10) => {
   const payload = {
@@ -9,10 +9,8 @@ const listFor = (workItemId, page = 1, pageSize = 10) => {
     startPage: page
   };
 
-  return SharedoFetch.post("/api/timeentries/finder", payload);
+  return SharedoFetch.post("/api/v2/public/time/entry/search", payload);
 };
-
-const codesFor = workItemId => SharedoFetch.get(`/api/timecodes/forsharedo/${workItemId}`);
 
 const categories = () => SharedoFetch.get("/api/v2/public/time/categories");
 
@@ -31,7 +29,7 @@ const update = (id, entry) => {
 
 const submit = id => {
   const endPoint = {
-    url: `/api/time/entry/${id}/state/submit`,
+    url: `/api/v2/public/time/entry/${id}/submit`,
     responseType: "text"
   };
 
@@ -45,7 +43,6 @@ const capture = (category, workItemId) => SharedoFetch.get(`/api/v2/public/time/
 export default {
   getConfiguration,
   listFor,
-  codesFor,
   categories,
   get,
   "new": _new,

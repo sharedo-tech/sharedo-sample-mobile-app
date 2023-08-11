@@ -47,6 +47,9 @@
               </v-btn>
             </v-card-text>
           </div>
+          <div class="flex-grow-0 d-flex" v-if="canNavigate(notification)">
+            <v-icon large color="grey lighten-2" @click="navigate(notification)">mdi-chevron-right</v-icon>
+          </div>
         </div>
       </v-card>
     </div>
@@ -55,7 +58,7 @@
 <script>
 import moment from "moment";
 import { mapState, mapActions } from "vuex";
-import { SharedoProfile } from "@sharedo/mobile-core";
+import { SharedoProfile, SharedoTypesTree } from "@sharedo/mobile-core";
 import notifications from "./notificationsAgent"
 
 export default {
@@ -91,11 +94,14 @@ export default {
     }),
     load: async function () {
       try {
-        await this.loadNotifications();
+        await Promise.all([this.loadTypesTree(), this.loadNotifications()])
       }
       catch (error) {
         console.error(error);
       }
+    },
+    loadTypesTree: async function () {
+      this.typesTree = await SharedoTypesTree.load();
     },
     loadNotifications: async function () {
       const response = await notifications.getFor(SharedoProfile.profile.userId);
@@ -158,6 +164,28 @@ export default {
       }
 
       return timestamp.fromNow();
+    },
+    canNavigate: function (notification) {
+      return this.typesTree.isDerivedFrom(notification.sharedoTypeSystemName, ["task", "matter"]);
+    },
+    navigate: async function (notification) {
+      if (!notification.hasBeenDismissed) {
+        await this.dismiss(notification);
+      }
+
+      let route;
+
+      if (this.typesTree.isDerivedFrom(notification.sharedoTypeSystemName, ["task"])) {
+        route = { name: "task-detail", params: { id: notification.sharedoId } };
+      } else if (this.typesTree.isDerivedFrom(notification.sharedoTypeSystemName, ["matter"])) {
+        route = { name: "matter-detail", params: { id: notification.sharedoId } };
+      }
+
+      if (route) {
+        this.$router.push(route);
+      } else {
+        console.error("Unsupported sharedo type.");
+      }
     }
   },
   mounted: async function () {

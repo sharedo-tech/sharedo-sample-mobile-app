@@ -116,6 +116,8 @@ export default {
                     { text: "Progress to", type: "header" },
                     { text: "Done", color: "primary", icon: "mdi-check", handler: self.confirmTransitionTo.bind(self, "done") },
                     { text: "Remove", color: "error", icon: "mdi-trash-can-outline", handler: function () { } },
+                    { text: "Additional Information", type: "header" },
+                    { text: "Participants", icon: "mdi-account-outline", handler: () => self.$router.push({ name: "task-participants", params: { id: self.id } }) }
                 ]
             });
         },

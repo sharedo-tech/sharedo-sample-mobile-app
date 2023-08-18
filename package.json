@@ -11,7 +11,7 @@
     "prod": "npx serve -s -l 8081 --ssl-cert .\\certs\\localhost+2.pem --ssl-key .\\certs\\localhost+2-key.pem dist"
   },
   "dependencies": {
-    "@sharedo/mobile-core": "^0.1.19",
+    "@sharedo/mobile-core": "^0.1.20",
     "core-js": "~3.6.5",
     "moment": "^2.29.4",
     "register-service-worker": "~1.7.2",

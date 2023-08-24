@@ -7,6 +7,7 @@ import settings from "./app/settings.js"
 import router from './router'
 import vuetify from './plugins/vuetify'
 import Menu from "@/components/Menu";
+import "@/filters";
 import '@sharedo/mobile-core/dist/global.css'
 import './registerServiceWorker'
 

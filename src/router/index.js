@@ -47,6 +47,15 @@ const routes = [
         component: () => import('../views/Participants/ParticipantList.vue')
     },
     {
+        // Tab 1 -> Detail -> Chronology
+        path: "/tasks/:id/chronology",
+        name: "task-chronology",
+        props: ({ params }) => ({
+            sharedoId: params.id
+        }),
+        component: () => import('../views/Chronology/ChronologyList.vue')
+    },
+    {
         // Tab 1 -> Bookmarks
         path: "/bookmarks",
         name: "bookmarks",

@@ -15,7 +15,8 @@
       There are no time entries.
     </h4>
     <div v-show="!loading" v-for="(item, index) in timeEntries" :key="item.id">
-      <v-subheader v-if="!isSameDay(item, timeEntries[index - 1])" class="px-1">{{ item.startDay }}</v-subheader>
+      <v-subheader v-if="!isSameDay(item, timeEntries[index - 1])" class="px-1">{{ item.startDateTime | calendarDate
+      }}</v-subheader>
       <v-card class="mx-auto mb-3 no-focus-on-click" outlined @click.stop="editEntry(item)">
         <div class="d-flex">
           <div class="flex-grow-1 min-w-0">
@@ -25,9 +26,9 @@
               </v-card-title>
               <div class="flex-grow-1 min-w-0">
                 <h3 class="font-weight-bold grey--text text--darken-3 mt-3">
-                  {{ item.start.format("HH:mm") }}
+                  {{ item.startDateTime | timeOnly }}
                   &ndash;
-                  {{ item.end.format("HH:mm") }}<span v-if="item.startDay !== item.endDay" class="day-indicator">*</span>
+                  {{ item.endDateTime | timeOnly }}<span v-if="!isSameDay(item)" class="day-indicator">*</span>
 
                   <span class="grey--text duration">
                     (<span v-if="item.duration.hours() !== 0">{{ item.duration.hours() }}<span class="small">h </span>
@@ -90,23 +91,16 @@ export default {
         const data = await time.listFor(this.sharedoId, 1, PAGE_SZE);
 
         this.timeEntries = data.rows.map(t => {
-          const start = moment(t.startDateTime);
-          const end = moment(t.endDateTime);
-
-          const duration = this.duration(start, end);
+          const duration = this.duration(t.startDateTime, t.endDateTime);
 
           return {
             id: t.id,
             icon: this.getIcon(t.stateSystemName),
-            cssClass: moment(t.stateSystemName),
+            cssClass: this.getClass(t.stateSystemName),
             startDateTime: t.startDateTime,
             endDateTime: t.endDateTime,
-            start: start,
-            end: end,
             duration: duration,
             durationSeconds: t.durationSeconds,
-            startDay: this.toCalendarDate(start),
-            endDay: this.toCalendarDate(end),
             odsId: t.odsId,
             state: t.stateSystemName,
             timekeeperName: t.timekeeperName,
@@ -137,14 +131,6 @@ export default {
 
       return moment.duration(roundUpMin);
     },
-    toCalendarDate: function (date) {
-      return date.calendar(null, {
-        lastDay: '[Yesterday]',
-        sameDay: '[Today]',
-        lastWeek: 'dddd, DD MMMM',
-        sameElse: 'L'
-      });
-    },
     isEditable: function (state) {
       return state === "draft" || state === "revising";
     },
@@ -165,7 +151,7 @@ export default {
         return "warning";
     },
     isSameDay: function (x, y) {
-      return y && x.startDay === y.startDay;
+      return y && x.startDateTime === y.startDateTime;
     },
     createEntry: function () {
       this.$coreUi.dialog(TimeEntryForm, {

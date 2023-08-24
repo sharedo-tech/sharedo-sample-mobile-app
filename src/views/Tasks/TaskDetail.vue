@@ -109,16 +109,25 @@ export default {
         showActionSheet: function () {
             var self = this;
 
+            const actions = [
+                { text: "Actions", type: "header" },
+                { text: "Take ownership", color: "primary", icon: "mdi-arrow-left", handler: self.takeOwnership.bind(self) },
+                { text: "Progress to", type: "header" },
+                { text: "Done", color: "primary", icon: "mdi-check", handler: self.confirmTransitionTo.bind(self, "done") },
+                { text: "Remove", color: "error", icon: "mdi-trash-can-outline", handler: function () { } },
+                { text: "Additional Information", type: "header" },
+            ];
+
+            if (SharedoProfile.profile.globalPermissions.includes("core.sharedo.participant.read")) {
+                actions.push({ text: "Participants", icon: "mdi-account-outline", handler: () => self.$router.push({ name: "task-participants", params: { id: self.id } }) });
+            }
+
+            if (SharedoProfile.profile.globalPermissions.includes("core.sharedo.participant.read")) {
+                actions.push({ text: "Chronology", icon: "mdi-flag-outline", handler: () => self.$router.push({ name: "task-chronology", params: { id: self.id } }) });
+            }
+
             self.$coreUi.actionSheet({
-                items: [
-                    { text: "Actions", type: "header" },
-                    { text: "Take ownership", color: "primary", icon: "mdi-arrow-left", handler: self.takeOwnership.bind(self) },
-                    { text: "Progress to", type: "header" },
-                    { text: "Done", color: "primary", icon: "mdi-check", handler: self.confirmTransitionTo.bind(self, "done") },
-                    { text: "Remove", color: "error", icon: "mdi-trash-can-outline", handler: function () { } },
-                    { text: "Additional Information", type: "header" },
-                    { text: "Participants", icon: "mdi-account-outline", handler: () => self.$router.push({ name: "task-participants", params: { id: self.id } }) }
-                ]
+                items: actions
             });
         },
         takeOwnership: function () {

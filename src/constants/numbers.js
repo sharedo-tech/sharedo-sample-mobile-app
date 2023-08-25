@@ -1,0 +1,5 @@
+const MAX_INT_VALUE = 2147483647;
+
+export {
+  MAX_INT_VALUE
+}

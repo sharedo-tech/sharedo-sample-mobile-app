@@ -7,6 +7,9 @@
             </template>
             <!-- Override right nav button -->
             <template slot="right">
+                <v-icon v-if="bookmarksEnabled" @click="$router.push({ name: 'bookmarks' })">
+                    mdi-star-box-outline
+                </v-icon>
                 <v-icon v-visible="!loading" @click="loadPage(true)">
                     mdi-cached
                 </v-icon>
@@ -70,6 +73,7 @@
   
 <script>
 import tasksAgent from "./tasksAgent";
+import bookmarks from "@/views/Bookmarks/bookmarksAgent";
 
 const rpp = 20;
 
@@ -82,14 +86,19 @@ export default {
             loadingMore: false,
             tasks: [],
             lastPageLoaded: 0,
-            hasMore: true
+            hasMore: true,
+            bookmarksEnabled: false
         };
     },
-    mounted() {
-        var self = this;
-        self.loadPage().then(result => {
-            self.hasMore = result.hasMore;
-        }).catch(console.error);
+    mounted: async function () {
+        try {
+            var results = await Promise.all([bookmarks.enabled(), this.loadPage()]);
+
+            this.bookmarksEnabled = results[0].enabled;
+            this.hasMore = results[1].hasMore;
+        } catch (error) {
+            console.error(error);
+        }
     },
     methods:
     {

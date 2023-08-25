@@ -51,7 +51,7 @@ export default {
     },
     bookmarkClicked: function (id) {
       this.$router.push({
-        name: "instruction-detail",
+        name: "task-detail",
         params: { id },
       });
     },

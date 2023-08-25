@@ -28,6 +28,7 @@
 
             <h3>
                 {{ title }}
+                <v-icon v-if="bookmarked" small>mdi-star</v-icon>
             </h3>
 
             <div class="mb-2">
@@ -59,6 +60,7 @@
 import { SharedoProfile } from "@sharedo/mobile-core";
 import TaskDetailForm from "./TaskDetailForm.vue";
 import tasksAgent from "./tasksAgent";
+import bookmarks from "@/views/Bookmarks/bookmarksAgent";
 
 export default {
     components: {
@@ -77,35 +79,71 @@ export default {
             title: "hello",
             description: null,
             canEdit: false,
+            bookmarkingEnabled: false,
+            bookmarked: false
         };
     },
     computed: {
         canViewTime: function () {
             return SharedoProfile.profile.globalPermissions.indexOf("core.time.read") !== -1;
+        },
+        canViewParticipants: function () {
+            return SharedoProfile.profile.globalPermissions.includes("core.sharedo.participant.read");
+        },
+        canViewChronology: function () {
+            return SharedoProfile.profile.globalPermissions.includes("core.sharedo.participant.read");
         }
     },
-    mounted: function (props) {
-        var self = this;
-
-        tasksAgent.getTask(this.id).then((task) => {
-            self.reference = task.workItem.reference;
-            self.title = task.workItem.title;
-            self.description = task.workItem.description;
-            self.loading = false;
-
-            if (!self.canEdit) {
-
-                // Locked - show banner
-                this.$coreUi.banner({
-                    message: "You cannot edit this item.",
-                    btns: [
-                        { text: "Become owner", color: "primary", handler: self.takeOwnership.bind(self) }
-                    ],
-                })
-            }
-        }).catch(console.error);
+    mounted: async function () {
+        await Promise.all([this.loadTask(), this.loadBookmarkingConfig()]);
     },
     methods: {
+        loadBookmarkingConfig: async function () {
+            try {
+                const { enabled } = await bookmarks.enabled();
+
+                if (enabled) {
+                    const { bookmarked } = await bookmarks.isBookmarked(this.id);
+                    this.bookmarked = bookmarked;
+                }
+
+                this.bookmarkingEnabled = enabled;
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        loadTask: async function () {
+            try {
+                const task = await tasksAgent.getTask(this.id);
+
+                this.reference = task.workItem.reference;
+                this.title = task.workItem.title;
+                this.description = task.workItem.description;
+                this.loading = false;
+
+                if (!self.canEdit) {
+
+                    // Locked - show banner
+                    this.$coreUi.banner({
+                        message: "You cannot edit this item.",
+                        btns: [
+                            { text: "Become owner", color: "primary", handler: this.takeOwnership.bind(this) }
+                        ],
+                    })
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        bookmark: async function (bookmark) {
+            if (bookmark) {
+                await bookmarks.bookmark(this.id);
+            } else {
+                await bookmarks.removeBookmark(this.id);
+            }
+
+            this.bookmarked = bookmark;
+        },
         showActionSheet: function () {
             var self = this;
 
@@ -115,14 +153,25 @@ export default {
                 { text: "Progress to", type: "header" },
                 { text: "Done", color: "primary", icon: "mdi-check", handler: self.confirmTransitionTo.bind(self, "done") },
                 { text: "Remove", color: "error", icon: "mdi-trash-can-outline", handler: function () { } },
-                { text: "Additional Information", type: "header" },
             ];
 
-            if (SharedoProfile.profile.globalPermissions.includes("core.sharedo.participant.read")) {
+            if (this.bookmarkingEnabled) {
+                if (!this.bookmarked) {
+                    actions.push({ text: "Bookmark", color: "primary", icon: "mdi-star-outline", handler: async () => await this.bookmark(true) });
+                } else {
+                    actions.push({ text: "Remove bookmark", color: "primary", icon: "mdi-star-off-outline", handler: async () => await this.bookmark(false) });
+                }
+            }
+
+            if (this.canViewParticipants || this.canViewChronology) {
+                actions.push({ text: "Additional Information", type: "header" });
+            }
+
+            if (this.canViewParticipants) {
                 actions.push({ text: "Participants", icon: "mdi-account-outline", handler: () => self.$router.push({ name: "task-participants", params: { id: self.id } }) });
             }
 
-            if (SharedoProfile.profile.globalPermissions.includes("core.sharedo.participant.read")) {
+            if (this.canViewChronology) {
                 actions.push({ text: "Chronology", icon: "mdi-flag-outline", handler: () => self.$router.push({ name: "task-chronology", params: { id: self.id } }) });
             }
 

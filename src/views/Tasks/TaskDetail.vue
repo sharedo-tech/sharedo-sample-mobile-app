@@ -8,6 +8,12 @@
             <template slot="right">
                 <v-icon v-if="canViewTime"
                     @click="$router.push({ name: 'task-time-entries', params: { id } })">mdi-clock-outline</v-icon>
+                <v-btn icon @click="$router.push({ name: 'task-comments', params: { id } })">
+                    <v-badge :value="commentCount > 0" :content="commentCount" color="error lighten-1" offset-x="12"
+                        offset-y="14">
+                        <v-icon>mdi-comment-outline</v-icon>
+                    </v-badge>
+                </v-btn>
                 <v-icon @click="showActionSheet()">
                     mdi-dots-horizontal
                 </v-icon>
@@ -61,6 +67,7 @@ import { SharedoProfile } from "@sharedo/mobile-core";
 import TaskDetailForm from "./TaskDetailForm.vue";
 import tasksAgent from "./tasksAgent";
 import bookmarks from "@/views/Bookmarks/bookmarksAgent";
+import comments from "@/views/Comments/commentsAgent";
 
 export default {
     components: {
@@ -80,7 +87,8 @@ export default {
             description: null,
             canEdit: false,
             bookmarkingEnabled: false,
-            bookmarked: false
+            bookmarked: false,
+            commentCount: 0
         };
     },
     computed: {
@@ -95,7 +103,7 @@ export default {
         }
     },
     mounted: async function () {
-        await Promise.all([this.loadTask(), this.loadBookmarkingConfig()]);
+        await Promise.all([this.loadTask(), this.loadBookmarkingConfig(), this.loadCommentCount()]);
     },
     methods: {
         loadBookmarkingConfig: async function () {
@@ -131,6 +139,14 @@ export default {
                         ],
                     })
                 }
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        loadCommentCount: async function () {
+            try {
+                const { totalRows } = await comments.get(this.id, 1, 1);
+                this.commentCount = totalRows;
             } catch (error) {
                 console.error(error);
             }

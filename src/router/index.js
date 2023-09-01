@@ -56,6 +56,15 @@ const routes = [
         component: () => import('../views/Chronology/ChronologyList.vue')
     },
     {
+        // Tab 1 -> Detail -> Comments
+        path: "/tasks/:id/comments",
+        name: "task-comments",
+        props: ({ params }) => ({
+            sharedoId: params.id
+        }),
+        component: () => import('../views/Comments/CommentList.vue')
+    },
+    {
         // Tab 1 -> Bookmarks
         path: "/bookmarks",
         name: "bookmarks",

@@ -34,6 +34,7 @@
   </v-container>
 </template>
 <script>
+import moment from "moment";
 import chronologyAgent from "./chronologyAgent.js";
 import { toChronologyListItems } from "@/util/mappers";
 
@@ -91,7 +92,7 @@ export default {
       }
     },
     isSameDay: function (x, y) {
-      return y && x.createdDay === y.createdDay;
+      return y && moment(x.created).dayOfYear() === moment(y.created).dayOfYear();
     }
   },
   mounted: async function () {

@@ -58,6 +58,15 @@
                 <div v-html="description"></div>
             </div>
 
+            <v-expansion-panels flat tile class="mt-5 mb-5 grey-panels" v-model="openedPanel">
+                <v-expansion-panel>
+                    <v-expansion-panel-header class="panel-header">Related documents</v-expansion-panel-header>
+                    <v-expansion-panel-content id="documents-panel" eager>
+                        <related-document-list v-if="id" :id="id" :can-edit="canEdit" />
+                    </v-expansion-panel-content>
+                </v-expansion-panel>
+            </v-expansion-panels>
+
         </div>
     </v-container>
 </template>
@@ -69,9 +78,12 @@ import tasksAgent from "./tasksAgent";
 import bookmarks from "@/views/Bookmarks/bookmarksAgent";
 import comments from "@/views/Comments/commentsAgent";
 
+const RelatedDocumentList = () => import("@/views/RelatedDocuments/RelatedDocumentList");
+
 export default {
     components: {
         TaskDetailForm,
+        RelatedDocumentList
     },
     props: {
         id: {
@@ -86,9 +98,11 @@ export default {
             title: "hello",
             description: null,
             canEdit: false,
+            canProgress: false,
             bookmarkingEnabled: false,
             bookmarked: false,
-            commentCount: 0
+            commentCount: 0,
+            openedPanel: null
         };
     },
     computed: {
@@ -103,7 +117,7 @@ export default {
         }
     },
     mounted: async function () {
-        await Promise.all([this.loadTask(), this.loadBookmarkingConfig(), this.loadCommentCount()]);
+        await Promise.all([this.loadPermissions(), this.loadTask(), this.loadBookmarkingConfig(), this.loadCommentCount()]);
     },
     methods: {
         loadBookmarkingConfig: async function () {
@@ -159,6 +173,16 @@ export default {
             }
 
             this.bookmarked = bookmark;
+        },
+        loadPermissions: async function () {
+            try {
+                const permissions = await tasksAgent.getPermissions(this.id);
+
+                this.canEdit = permissions.includes("core.sharedo.update");
+                this.canProgress = permissions.includes("core.sharedo.progress.milestone");
+            } catch (error) {
+                console.error(error);
+            }
         },
         showActionSheet: function () {
             var self = this;

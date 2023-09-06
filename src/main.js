@@ -8,6 +8,7 @@ import router from './router'
 import Menu from "@/components/Menu";
 import "@/filters";
 import '@sharedo/mobile-core/dist/global.css'
+import "@/css/app.scss";
 import './registerServiceWorker'
 
 Vue.config.productionTip = false

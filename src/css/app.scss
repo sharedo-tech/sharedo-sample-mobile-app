@@ -1,0 +1,36 @@
+/* Expansion panels - grey style */
+.v-expansion-panels.grey-panels {
+  & .v-expansion-panel {
+    border: 4px solid var(--v-grey-lighten2);
+    border-radius: 10px;
+
+    &:not(:first-child) {
+      margin-top: 12px;
+    }
+
+    &:not(.v-expansion-panel--active) {
+      background-color: var(--v-grey-lighten2);
+    }
+  }
+
+  & .v-expansion-panel--active>.v-expansion-panel-header {
+    min-height: 24px;
+    background: transparent;
+    color: var(--v-grey-darken4);
+  }
+
+  & .v-expansion-panel-content__wrap {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  & .panel-header {
+    color: var(--v-grey-darken3);
+    background: var(--v-grey-lighten2);
+    transition: background .2s;
+    font-weight: bold;
+    border-radius: 0;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}

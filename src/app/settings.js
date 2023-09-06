@@ -1,3 +1,4 @@
+import App from "./App";
 
 var settings =
 {
@@ -21,8 +22,7 @@ var settings =
 // e.g.: SHAREDO_IDENTITY="https://my-sharedo-identity.local"
 //       etc.
 //
-if( process && process.env )
-{
+if (process && process.env) {
     settings.identity = process.env.VUE_APP_IDENTITY || settings.identity;
     settings.api = process.env.VUE_APP_API || settings.api;
     settings.clientId = process.env.VUE_APP_CLIENTID || settings.clientId;
@@ -35,24 +35,26 @@ function get() {
     // Try to get config from Functions API, handling errors graceful
     return new Promise((resolve, reject) => {
         fetch("/api/settings")
-        .then(function(response) {
-            if (!response.ok)
-                throw new Error("Functions call failed: " + response.status);
+            .then(function (response) {
+                if (!response.ok)
+                    throw new Error("Functions call failed: " + response.status);
 
-            return response.json();
-        })
-        .then(function(response) {
-            // Override default settings with result of Functions API call
-            resolve( Object.assign(settings, response) );
-        })
-        .catch(function() {
-            console.log("Functions not running? Using defaults");
-            resolve(settings);
-        });
-      });
+                return response.json();
+            })
+            .then(function (response) {
+                // Override default settings with result of Functions API call
+                App.settings = { ...settings, ...response };
+                resolve(App.settings);
+            })
+            .catch(function () {
+                console.log("Functions not running? Using defaults");
+                App.settings = settings;
+                resolve(App.settings);
+            });
+    });
 }
 
-export default 
-{
-    get,
-};
+export default
+    {
+        get,
+    };

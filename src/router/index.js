@@ -1,10 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-
-import TaskList from '../views/Tasks/TaskList.vue';
-import TaskDetail from '../views/Tasks/TaskDetail.vue';
-import NewTask from '../views/Tabs/NewTask.vue';
-import Search from '../views/Tabs/Search.vue';
+import TaskList from "@/views/Tasks/TaskList.vue"
 
 Vue.use(VueRouter);
 
@@ -26,7 +22,7 @@ const routes = [
         path: "/tasks/:id",
         name: "task-detail",
         props: true,
-        component: TaskDetail
+        component: () => import("@/views/Tasks/TaskDetail.vue")
     },
     {
         // Tab 1 -> Detail -> Time Entries
@@ -35,7 +31,7 @@ const routes = [
         props: ({ params }) => ({
             sharedoId: params.id
         }),
-        component: () => import('../views/Time/TimeEntryList.vue')
+        component: () => import('@/views/Time/TimeEntryList.vue')
     },
     {
         // Tab 1 -> Detail -> Participants
@@ -44,7 +40,7 @@ const routes = [
         props: ({ params }) => ({
             sharedoId: params.id
         }),
-        component: () => import('../views/Participants/ParticipantList.vue')
+        component: () => import('@/views/Participants/ParticipantList.vue')
     },
     {
         // Tab 1 -> Detail -> Chronology
@@ -53,7 +49,7 @@ const routes = [
         props: ({ params }) => ({
             sharedoId: params.id
         }),
-        component: () => import('../views/Chronology/ChronologyList.vue')
+        component: () => import('@/views/Chronology/ChronologyList.vue')
     },
     {
         // Tab 1 -> Detail -> Comments
@@ -62,25 +58,25 @@ const routes = [
         props: ({ params }) => ({
             sharedoId: params.id
         }),
-        component: () => import('../views/Comments/CommentList.vue')
+        component: () => import('@/views/Comments/CommentList.vue')
     },
     {
         // Tab 1 -> Bookmarks
         path: "/bookmarks",
         name: "bookmarks",
-        component: () => import('../views/Bookmarks/BookmarkList.vue')
+        component: () => import('@/views/Bookmarks/BookmarkList.vue')
     },
     {
         // Tab 2
         path: '/new-task',
         name: 'new-task',
-        component: NewTask
+        component: () => import("@/views/Tabs/NewTask.vue")
     },
     {
         // Tab 3
         path: '/search',
         name: 'search',
-        component: Search
+        component: () => import("@/views/Tabs/Search.vue")
     },
     {
         path: "/work-items",

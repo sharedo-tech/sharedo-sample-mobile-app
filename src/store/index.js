@@ -8,6 +8,15 @@ export default new Vuex.Store({
     notifications: {
       unread: 0,
       stale: false
+    },
+    search: {
+      query: "",
+      results: null,
+      resultCount: -1,
+      currentPage: 1,
+      pageSize: 10,
+      sortDirection: "ascending",
+      sortBy: null
     }
   },
   actions: {
@@ -25,6 +34,17 @@ export default new Vuex.Store({
     },
     setStaleNotifications: ({ state }, stale) => {
       state.notifications.stale = stale;
+    },
+    updateSearch: ({ state }, search) => {
+      state.search = { ...search }
+    },
+    resetSearch: ({ state }) => {
+      state.search = {
+        query: "",
+        results: null,
+        resultCount: -1,
+        currentPage: 1,
+      }
     }
   }
 })

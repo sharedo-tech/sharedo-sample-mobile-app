@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { CoreUi, SharedoProfile } from "@sharedo/mobile-core";
+import { SharedoProfile } from "@sharedo/mobile-core";
 import TaskDetailForm from "./TaskDetailForm.vue";
 import tasksAgent from "./tasksAgent";
 import bookmarks from "@/views/Bookmarks/bookmarksAgent";
@@ -95,13 +95,14 @@ export default {
       reference: null,
       title: "hello",
       description: null,
-      canEdit: false,
-      canProgress: false,
       bookmarkingEnabled: false,
       bookmarked: false,
       commentCount: 0,
       openedPanel: null,
-      phases: []
+      phases: [],
+      permissions: [],
+      owner: "",
+      actions: null
     };
   },
   computed: {
@@ -116,6 +117,18 @@ export default {
     },
     userDrivenPhases: function () {
       return this.phases.filter(phase => phase.isUserDriven);
+    },
+    isOwner: function () {
+      return SharedoProfile.profile.userId === this.owner;
+    },
+    canEdit: function () {
+      return this.isOwner || this.permissions.includes("core.sharedo.update");
+    },
+    canProgress: function () {
+      return this.isOwner || this.permissions.includes("core.sharedo.progress.milestone");
+    },
+    canTakeOwnership: function () {
+      return !this.isOwner && this.actions && this.actions.canTakeOwnership;
     }
   },
   mounted: async function () {
@@ -149,13 +162,14 @@ export default {
         this.reference = task.workItem.reference;
         this.title = task.workItem.title;
         this.description = task.workItem.description;
+        this.owner = task.aspectData.taskAssignedTo.primaryOwner;
         this.loading = false;
 
-        if (!self.canEdit) {
+        if (this.canTakeOwnership) {
 
           // Locked - show banner
           this.$coreUi.banner({
-            message: "You cannot edit this item.",
+            message: "You are not the task owner.",
             btns: [
               { text: "Become owner", color: "primary", handler: this.takeOwnership.bind(this) }
             ],
@@ -184,10 +198,7 @@ export default {
     },
     loadPermissions: async function () {
       try {
-        const permissions = await tasksAgent.getPermissions(this.id);
-
-        this.canEdit = permissions.includes("core.sharedo.update");
-        this.canProgress = permissions.includes("core.sharedo.progress.milestone");
+        this.permissions = await tasksAgent.getPermissions(this.id);
       } catch (error) {
         console.error(error);
       }
@@ -199,15 +210,25 @@ export default {
         console.error(error);
       }
     },
+    loadActions: async function () {
+      try {
+        this.actions = await tasksAgent.getActions(this.id);
+      } catch (error) {
+        console.error(error);
+      }
+    },
     showActionSheet: function () {
       const self = this;
 
       const actions = [
         { text: "Actions", type: "header" },
-        { text: "Take ownership", color: "primary", icon: "mdi-arrow-left", handler: () => self.takeOwnership() },
       ];
 
-      if (this.userDrivenPhases.length > 0) {
+      if (this.canTakeOwnership) {
+        actions.push({ text: "Take ownership", color: "primary", icon: "mdi-arrow-left", handler: () => self.takeOwnership() })
+      }
+
+      if (this.canProgress && this.userDrivenPhases.length > 0) {
         actions.push({ text: "Progress to", type: "header" });
 
         this.userDrivenPhases.forEach(phase => {
@@ -246,19 +267,17 @@ export default {
         items: actions
       });
     },
-    takeOwnership: function () {
-      const self = this;
-      const loading = self.$coreUi.loading();
+    takeOwnership: async function () {
+      try {
+        const loading = this.$coreUi.loading();
 
-      // TODO call API
-      setTimeout(
-        function () {
-          loading.dismiss();
-          self.canEdit = true;
-          self.$coreUi.toast("You now own this item.");
-        },
-        500
-      );
+        await tasksAgent.takeOwnership(this.id);
+
+        this.owner = SharedoProfile.profile.userId;
+        loading.dismiss();
+      } catch (error) {
+        console.error(error);
+      }
     },
     showTaskDetailForm: function () {
       this.$coreUi.dialog(TaskDetailForm, {});

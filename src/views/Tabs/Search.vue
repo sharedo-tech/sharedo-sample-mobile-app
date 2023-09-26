@@ -235,7 +235,6 @@ export default {
       return subtitle;
     },
     navigate: function (item) {
-      debugger;
       let route;
 
       if (this.typesTree.isDerivedFrom(item.type.systemName, ["task"])) {

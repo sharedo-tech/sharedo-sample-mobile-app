@@ -107,6 +107,11 @@ function takeOwnership(id) {
     return SharedoFetch.post(`/api/tasks/${id}/takeownership`, {});
 }
 
+const getActions = async id => {
+    const response = await SharedoFetch.get(`/api/tasks/${id}`);
+    return response.participantActions;
+}
+
 export default {
     getMyTasks,
     getTask,
@@ -116,4 +121,5 @@ export default {
     setPhase,
     getPermissions,
     takeOwnership,
+    getActions
 };

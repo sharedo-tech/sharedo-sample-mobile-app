@@ -37,8 +37,8 @@
   </v-container>
 </template>
 <script>
-import notifications from "./notificationsAgent";
-import pushNotifications from "./pushNotificationsService";
+import { notifications } from "@/agents";
+import { pushNotifications } from "@/services";
 
 export default {
   data: function () {

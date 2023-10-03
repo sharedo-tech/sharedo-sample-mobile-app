@@ -68,7 +68,7 @@
 import { SharedoProfile } from "@sharedo/mobile-core";
 import moment from "moment";
 import SegmentSelector from "./SegmentSelector";
-import time from "./timeAgent.js";
+import { time } from "@/agents";
 
 export default {
   components: { SegmentSelector },

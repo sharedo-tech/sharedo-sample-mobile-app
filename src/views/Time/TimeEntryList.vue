@@ -61,7 +61,7 @@
 <script>
 import moment from "moment";
 import { SharedoProfile } from "@sharedo/mobile-core";
-import time from "./timeAgent";
+import { time } from "@/agents";
 import TimeEntryForm from "./TimeEntryForm"
 
 const PAGE_SZE = 99;

@@ -1,5 +1,5 @@
 import serviceWorker from "@/registerServiceWorker";
-import notifications from "./notificationsAgent";
+import { notifications } from "@/agents";
 
 const toBase64 = buffer => {
   let binary = '';

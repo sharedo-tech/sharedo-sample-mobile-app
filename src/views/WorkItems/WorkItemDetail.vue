@@ -70,23 +70,26 @@
 
 <script>
 import { SharedoProfile } from "@sharedo/mobile-core";
-import TaskDetailForm from "./TaskDetailForm.vue";
-import tasksAgent from "./tasksAgent";
-import bookmarks from "@/views/Bookmarks/bookmarksAgent";
-import comments from "@/views/Comments/commentsAgent";
-import phases from "./phaseAgent";
+import { tasks, matters, comments, bookmarks, phases } from "@/agents";
+import { MATTER, TASK } from "@/constants/workItemTypes";
 
+const EditWorkItem = () => import("./EditWorkItem");
 const RelatedDocumentList = () => import("@/views/RelatedDocuments/RelatedDocumentList");
 
 export default {
   components: {
-    TaskDetailForm,
+    EditWorkItem,
     RelatedDocumentList
   },
   props: {
     id: {
       type: String,
       required: true
+    },
+    type: {
+      type: String,
+      required: false,
+      default: TASK
     }
   },
   data: function () {
@@ -95,6 +98,7 @@ export default {
       reference: null,
       title: "hello",
       description: null,
+      taskDueDate: "",
       bookmarkingEnabled: false,
       bookmarked: false,
       commentCount: 0,
@@ -102,7 +106,9 @@ export default {
       phases: [],
       permissions: [],
       owner: "",
-      actions: null
+      actions: null,
+      titleIsUserProvided: false,
+      referenceIsUserProvided: false
     };
   },
   computed: {
@@ -135,7 +141,7 @@ export default {
     await Promise.all([
       this.loadPermissions(),
       this.loadPhases(),
-      this.loadTask(),
+      this.loadWorkItem(),
       this.loadBookmarkingConfig(),
       this.loadCommentCount()
     ]);
@@ -155,14 +161,26 @@ export default {
         console.error(error);
       }
     },
+    loadWorkItem: function () {
+      if (this.type === TASK) {
+        return this.loadTask();
+      } else if (this.type === MATTER) {
+        return this.loadMatter();
+      }
+    },
     loadTask: async function () {
       try {
-        const task = await tasksAgent.getTask(this.id);
+        const task = await tasks.getTask(this.id);
 
         this.reference = task.workItem.reference;
         this.title = task.workItem.title;
         this.description = task.workItem.description;
+        this.taskDueDate = task.aspectData.task.dueDateTime;
         this.owner = task.aspectData.taskAssignedTo.primaryOwner;
+
+        this.titleIsUserProvided = task.workItem.titleIsUserProvided;
+        this.referenceIsUserProvided = task.workItem.referenceIsUserProvided;
+
         this.loading = false;
 
         if (this.canTakeOwnership) {
@@ -175,6 +193,21 @@ export default {
             ],
           })
         }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    loadMatter: async function () {
+      try {
+        const matter = await matters.get(this.id);
+        this.reference = matter.workItem.reference;
+        this.title = matter.workItem.title;
+        this.description = matter.workItem.description;
+
+        this.titleIsUserProvided = matter.workItem.titleIsUserProvided;
+        this.referenceIsUserProvided = matter.workItem.referenceIsUserProvided;
+
+        this.loading = false;
       } catch (error) {
         console.error(error);
       }
@@ -198,7 +231,7 @@ export default {
     },
     loadPermissions: async function () {
       try {
-        this.permissions = await tasksAgent.getPermissions(this.id);
+        this.permissions = await tasks.getPermissions(this.id);
       } catch (error) {
         console.error(error);
       }
@@ -212,7 +245,7 @@ export default {
     },
     loadActions: async function () {
       try {
-        this.actions = await tasksAgent.getActions(this.id);
+        this.actions = await tasks.getActions(this.id);
       } catch (error) {
         console.error(error);
       }
@@ -271,7 +304,7 @@ export default {
       try {
         const loading = this.$coreUi.loading();
 
-        await tasksAgent.takeOwnership(this.id);
+        await tasks.takeOwnership(this.id);
 
         this.owner = SharedoProfile.profile.userId;
         loading.dismiss();
@@ -280,7 +313,25 @@ export default {
       }
     },
     showTaskDetailForm: function () {
-      this.$coreUi.dialog(TaskDetailForm, {});
+      const vm = this;
+
+      this.$coreUi.dialog(EditWorkItem, {
+        id: vm.id,
+        type: vm.type,
+        workItem: {
+          title: vm.title,
+          reference: vm.reference,
+          taskDueDate: vm.taskDueDate,
+          titleIsUserProvided: vm.titleIsUserProvided,
+          referenceIsUserProvided: vm.referenceIsUserProvided
+        }
+      }, {
+        closing: saved => {
+          if (saved) {
+            vm.loadWorkItem();
+          }
+        }
+      });
     },
     confirmTransitionTo: function (phase) {
       const self = this;

@@ -52,8 +52,7 @@
 </template>
 <script>
 import moment from "moment";
-import comments from "./commentsAgent";
-import profile from "@/views/Profile/profileAgent";
+import { comments, profile } from "@/agents";
 import settings from "@/app/settings";
 
 const PAGE_SIZE = 10;

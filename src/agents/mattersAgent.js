@@ -35,6 +35,9 @@ const list = (page, pageSize) => {
       { path: "type.name" },
       { path: "type.iconClass" },
       { path: "phase.name" },
+      { path: "roles.primary-owner.ods.name" },
+      { path: "roles.primary-owner.participantType.iconClass" },
+      { path: "documents!1.title" },
     ]
   };
 

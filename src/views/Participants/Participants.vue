@@ -24,7 +24,7 @@
 </template>
 <script>
 import { MapUrlGenerator, ContactUrlGenerator } from "@sharedo/mobile-core";
-import participants from "./participantsAgent";
+import { participants } from "@/agents";
 import { toOdsEntityType } from "@/util/mappers/participantTypeMapper";
 import { fromParticipantLocation } from "@/util/mappers/locationMapper";
 

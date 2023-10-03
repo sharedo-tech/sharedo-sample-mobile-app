@@ -31,7 +31,7 @@
   </v-container>
 </template>
 <script>
-import bookmarks from "./bookmarksAgent";
+import { bookmarks } from "@/agents";
 
 export default {
   data: function () {

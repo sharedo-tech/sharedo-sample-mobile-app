@@ -50,7 +50,7 @@
 </template>
 <script>
 import { SharedoProfile } from "@sharedo/mobile-core";
-import profiles from "./profileAgent"
+import { profile } from "@/agents";
 import { DEFAULT_AVATAR } from "@/constants/urls";
 
 const FALLBACK_CONTACT_ICON = "mdi-access-point";
@@ -88,10 +88,10 @@ export default {
       this.name = SharedoProfile.profile.name;
       this.profileImageDefault = DEFAULT_AVATAR;
 
-      const profile = await profiles.get();
+      const myProfile = await profile.get();
 
-      this.availability = this.availabilityOptions[profile.availabilitySystemName] || {};
-      this.contactDetails = profile.aspectData.contactDetails
+      this.availability = this.availabilityOptions[myProfile.availabilitySystemName] || {};
+      this.contactDetails = myProfile.aspectData.contactDetails
         .map(item => {
           let icon = FALLBACK_CONTACT_ICON;
 
@@ -107,7 +107,7 @@ export default {
         .filter(item => item.icon);
     },
     loadAvatar: async function () {
-      const avatar = await profiles.getAvatar();
+      const avatar = await profile.getAvatar();
 
       this.profileImageBase64 = avatar ? `data:${avatar.mimeType};base64,${avatar.content}` : null;
     },

@@ -59,7 +59,7 @@
 import moment from "moment";
 import { mapState, mapActions } from "vuex";
 import { SharedoProfile, SharedoTypesTree } from "@sharedo/mobile-core";
-import notifications from "./notificationsAgent"
+import { notifications } from "@/agents"
 
 export default {
   data: function () {

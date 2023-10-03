@@ -43,7 +43,7 @@
 <script>
 import { VBtnSection } from "@sharedo/mobile-core"
 import DocumentViewer from "./DocumentViewer"
-import relatedDocuments from "./relatedDocumentsAgent";
+import { relatedDocuments } from "@/agents";
 import { makeUnique, isImage, isVideo, getExtension } from "@/util/files"
 
 export default {

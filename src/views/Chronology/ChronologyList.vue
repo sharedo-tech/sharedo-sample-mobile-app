@@ -35,7 +35,7 @@
 </template>
 <script>
 import moment from "moment";
-import chronologyAgent from "./chronologyAgent.js";
+import { chronology } from "@/agents";
 import { toChronologyListItems } from "@/util/mappers";
 
 const PAGE_SIZE = 10;
@@ -61,7 +61,7 @@ export default {
       try {
         this.lastPageLoaded++;
 
-        const result = await chronologyAgent.get(this.sharedoId, this.lastPageLoaded, PAGE_SIZE);
+        const result = await chronology.get(this.sharedoId, this.lastPageLoaded, PAGE_SIZE);
         const models = toChronologyListItems(result.rows);
         const totalPages = Math.ceil(result.totalRows / PAGE_SIZE);
         const hasMore = totalPages > this.lastPageLoaded;

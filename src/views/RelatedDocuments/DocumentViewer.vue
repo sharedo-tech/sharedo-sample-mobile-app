@@ -32,7 +32,7 @@
   </v-card>
 </template>
 <script>
-import relatedDocuments from "./relatedDocumentsAgent";
+import { relatedDocuments } from "@/agents";
 import { isImage, isVideo, getExtension } from "@/util/files";
 
 export default {

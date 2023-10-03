@@ -68,7 +68,7 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import { SharedoProfile, SharedoTypesTree, debounce } from "@sharedo/mobile-core";
-import search from "./searchAgent";
+import { search } from "@/agents";
 
 export default {
   data: function () {

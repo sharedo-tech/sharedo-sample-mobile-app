@@ -18,7 +18,7 @@
           </v-btn>
 
           <v-btn class="primary-action" @click.stop="showNewTaskForm()">
-            <span>New Task</span>
+            <span>New</span>
             <v-icon>mdi-plus-circle-outline</v-icon>
           </v-btn>
 
@@ -47,6 +47,8 @@ import { InstallPrompt, SharedoProfile } from '@sharedo/mobile-core';
 import { notifications } from "@/agents";
 import serviceWorkerBridge from "@/mixins/serviceWorkerBridge";
 
+const NewWorkItem = () => import("@/views/WorkItems/New/WorkItemType");
+
 export default {
   name: "Main",
   mixins: [serviceWorkerBridge],
@@ -58,6 +60,13 @@ export default {
     ...mapState({
       unreadNotifications: state => state.notifications.unread,
     }),
+    parentId: function () {
+      if (this.$route.name === "matter-detail") {
+        return this.$route.params.id;
+      }
+
+      return "";
+    }
   },
   mounted: async function () {
     InstallPrompt.init();
@@ -77,6 +86,7 @@ export default {
       }
     },
     showNewTaskForm: function () {
+      this.$coreUi.dialog(NewWorkItem, { parentId: this.parentId });
     },
   },
 };

@@ -13,7 +13,10 @@
             <v-icon>mdi-comment-outline</v-icon>
           </v-badge>
         </v-btn>
-        <v-icon @click="showActionSheet()">
+        <v-icon v-if="isMatter" @click="showNewTaskForm">
+          mdi-plus
+        </v-icon>
+        <v-icon @click="showActionSheet">
           mdi-dots-horizontal
         </v-icon>
       </template>
@@ -73,11 +76,13 @@ import { SharedoProfile } from "@sharedo/mobile-core";
 import { tasks, matters, comments, bookmarks, phases } from "@/agents";
 import { MATTER, TASK } from "@/constants/workItemTypes";
 
+const NewWorkItem = () => import("@/views/WorkItems/New/WorkItemType");
 const EditWorkItem = () => import("./EditWorkItem");
 const RelatedDocumentList = () => import("@/views/RelatedDocuments/RelatedDocumentList");
 
 export default {
   components: {
+    NewWorkItem,
     EditWorkItem,
     RelatedDocumentList
   },
@@ -112,6 +117,9 @@ export default {
     };
   },
   computed: {
+    isMatter: function () {
+      return this.type === MATTER
+    },
     canViewTime: function () {
       return SharedoProfile.profile.globalPermissions.indexOf("core.time.read") !== -1;
     },
@@ -249,6 +257,9 @@ export default {
       } catch (error) {
         console.error(error);
       }
+    },
+    showNewTaskForm: function () {
+      this.$coreUi.dialog(NewWorkItem, { parentId: this.id });
     },
     showActionSheet: function () {
       const self = this;

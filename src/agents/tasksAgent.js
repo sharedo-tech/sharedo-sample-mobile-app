@@ -112,6 +112,8 @@ const getActions = async id => {
     return response.participantActions;
 }
 
+const create = task => SharedoFetch.post("/api/v1/public/workItem", task);
+
 export default {
     getMyTasks,
     getTask,
@@ -121,5 +123,6 @@ export default {
     setPhase,
     getPermissions,
     takeOwnership,
-    getActions
+    getActions,
+    create
 };

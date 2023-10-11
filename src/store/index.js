@@ -1,9 +1,6 @@
-import Vue from 'vue'
-import Vuex from "vuex";
+import { useStore } from "@sharedo/mobile-core";
 
-Vue.use(Vuex);
-
-export default new Vuex.Store({
+const store = useStore({
   state: {
     notifications: {
       unread: 0,
@@ -47,4 +44,6 @@ export default new Vuex.Store({
       }
     }
   }
-})
+});
+
+export default store;

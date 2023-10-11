@@ -1,9 +1,6 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import { useRouter } from '@sharedo/mobile-core';
 import WorkItemList from "@/views/WorkItems/WorkItemList";
 import { TASK, MATTER } from "@/constants/workItemTypes";
-
-Vue.use(VueRouter);
 
 const routes = [
   {
@@ -20,6 +17,12 @@ const routes = [
     path: "/profile",
     name: "profile",
     component: () => import("@/views/Profile/Profile.vue")
+  },
+  {
+    path: "/tasks/new",
+    name: "new-task",
+    props: true,
+    component: () => import("@/views/WorkItems/New/NewTask.vue")
   },
   {
     // Tab 1 -> Detail
@@ -114,10 +117,6 @@ const routes = [
   }
 ]
 
-const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes: routes,
-});
+const router = useRouter(routes);
 
 export default router;

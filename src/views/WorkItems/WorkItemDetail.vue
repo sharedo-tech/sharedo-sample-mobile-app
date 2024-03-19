@@ -73,7 +73,7 @@
 
 <script>
 import { SharedoProfile } from "@sharedo/mobile-core";
-import { tasks, matters, comments, bookmarks, phases } from "@/agents";
+import { tasks, matters, comments, bookmarks, phases, participants } from "@/agents";
 import { MATTER, TASK } from "@/constants/workItemTypes";
 
 const NewWorkItem = () => import("@/views/WorkItems/New/WorkItemType");
@@ -110,7 +110,7 @@ export default {
       openedPanel: null,
       phases: [],
       permissions: [],
-      owner: "",
+      owner: "",          // ODS ID of owner
       actions: null,
       titleIsUserProvided: false,
       referenceIsUserProvided: false
@@ -180,12 +180,15 @@ export default {
       try {
         const task = await tasks.getTask(this.id);
 
+        const parts = await participants.getParticipantsFor(this.id);
+        
         this.reference = task.workItem.reference;
         this.title = task.workItem.title;
         this.description = task.workItem.description;
         this.taskDueDate = task.aspectData.task.dueDateTime;
-        this.owner = task.aspectData.taskAssignedTo.primaryOwner;
 
+        this.owner = (parts.find(p => p.participantRoleType === "primary-owner") || {}).odsId;
+        
         this.titleIsUserProvided = task.workItem.titleIsUserProvided;
         this.referenceIsUserProvided = task.workItem.referenceIsUserProvided;
 

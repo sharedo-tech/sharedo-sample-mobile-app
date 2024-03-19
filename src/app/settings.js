@@ -6,7 +6,7 @@ var settings =
     api: "https://xyz.sharedo.co.uk",
     clientId: "mobile-app",
     clientSecret: "not a secret",
-    redirectUri: "https://localhost:8080/oAuthReply",
+    redirectUri: "https://localhost:8081/oAuthReply",
 }
 
 // DO NOT commit actual configuration to git.

@@ -54,7 +54,7 @@ export default {
       reference: "",
       title: "",
       description: "",
-      dueDate: moment.now(),
+      dueDate: moment().utc().format(),
       matters: [],
       loading: true,
       selectedMatter: this.parentId

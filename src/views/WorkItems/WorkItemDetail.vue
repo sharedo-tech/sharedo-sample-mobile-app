@@ -185,7 +185,7 @@ export default {
         this.reference = task.workItem.reference;
         this.title = task.workItem.title;
         this.description = task.workItem.description;
-        this.taskDueDate = task.aspectData.task.dueDateTime;
+        this.taskDueDate = task.aspectData.task?.dueDateTime;
 
         this.owner = (parts.find(p => p.participantRoleType === "primary-owner") || {}).odsId;
         

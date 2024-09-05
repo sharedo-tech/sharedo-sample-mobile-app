@@ -95,7 +95,7 @@ export default {
       workItem.workItem.reference = this.reference;
       workItem.workItem.title = this.title;
 
-      if (this.type === TASK) {
+      if (this.type === TASK && workItem.aspectData.task) {
         workItem.aspectData.task.dueDateTime = this.taskDueDate;
       }
 
